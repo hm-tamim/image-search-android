@@ -49,7 +49,7 @@ abstract class BaseFragment<DATA_BINDING : ViewDataBinding, VIEW_MODEL : ViewMod
     protected abstract fun clickListeners()
     protected abstract fun liveEventsObservers()
 
-    protected fun setupRecycler() {
+    protected open fun setupRecycler() {
 
     }
 

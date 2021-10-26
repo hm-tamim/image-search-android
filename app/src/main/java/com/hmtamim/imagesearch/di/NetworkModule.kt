@@ -23,7 +23,7 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient? {
+    fun provideOkHttpClient(): OkHttpClient {
         val okHttpClient = OkHttpClient.Builder()
         okHttpClient.connectTimeout(120, TimeUnit.SECONDS)
         okHttpClient.readTimeout(120, TimeUnit.SECONDS)
@@ -34,13 +34,13 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiClient? {
+    fun provideApiService(retrofit: Retrofit): ApiClient {
         return retrofit.create(ApiClient::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient?): Retrofit? {
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -51,7 +51,7 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideApiRepository(): ApiRepository {
-        return ApiRepository()
+    fun provideApiRepository(apiClient: ApiClient): ApiRepository {
+        return ApiRepository(apiClient)
     }
 }
