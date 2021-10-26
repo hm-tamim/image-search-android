@@ -33,7 +33,15 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
 
     override fun initViews() {
         postponeEnterTransition()
+        checkArguments()
         initSearch()
+    }
+
+    private fun checkArguments() {
+        arguments?.let {
+            if (it.containsKey("query"))
+                binding.etSearch.setText(it["query"].toString())
+        }
     }
 
     private fun initSearch() {
@@ -85,6 +93,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
                 )
             )
         })
+
     }
 
     override fun setupRecycler() {

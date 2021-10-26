@@ -16,9 +16,10 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:text="No photos found"
             android:textColor="#aaa"
+            android:layout_marginBottom="150dp"
             android:textSize="18sp" />
 
     </LinearLayout>

@@ -1,4 +1,5 @@
 <resources>
-    <string name="app_name">Pluang</string>
+    <string name="app_name">Image Search</string>
     <string name="search_images">Search images...</string>
+    <string name="home_description">Easily search for any image by typing a query, the app will show all the images related to it.</string>
 </resources>

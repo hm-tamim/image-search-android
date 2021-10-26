@@ -2,6 +2,7 @@ package com.hmtamim.imagesearch.ui.gallery
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.hmtamim.imagesearch.R
 import com.hmtamim.imagesearch.data.repository.ApiRepository
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GalleryViewModel @Inject constructor(
-    var apiRepository: ApiRepository
+    var apiRepository: ApiRepository,
+    var savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     var query = "nature"
@@ -26,6 +28,9 @@ class GalleryViewModel @Inject constructor(
     init {
         page = 1
         gridSizeLiveData.value = 2
+        if (savedStateHandle.contains("query")) {
+            query = savedStateHandle.get<String>("query").toString()
+        }
         getPhotos()
     }
 

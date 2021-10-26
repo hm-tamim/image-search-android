@@ -43,6 +43,7 @@ class GalleryController(val clickListener: ClickListener) : EpoxyController() {
 
         EmptyModel_()
             .id("empty_model")
+            .spanSizeOverride { totalSpanCount, position, itemCount -> spanCount }
             .addIf(!isLoading && list.isEmpty(), this)
 
     }
