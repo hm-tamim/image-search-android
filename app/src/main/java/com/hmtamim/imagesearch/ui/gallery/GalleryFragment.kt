@@ -1,10 +1,13 @@
 package com.hmtamim.imagesearch.ui.gallery
 
 import android.os.Bundle
-import android.view.ViewGroup
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
+import android.widget.TextView.OnEditorActionListener
 import androidx.core.content.ContextCompat
-import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.GridLayoutManager
@@ -14,6 +17,7 @@ import com.hmtamim.imagesearch.databinding.FragmentGalleryBinding
 import com.hmtamim.imagesearch.ui.base.BaseFragment
 import com.hmtamim.imagesearch.ui.gallery.controller.GalleryController
 import com.hmtamim.imagesearch.utils.PaginationScrollListener
+import com.hmtamim.imagesearch.utils.ToastUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,6 +33,39 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
 
     override fun initViews() {
         postponeEnterTransition()
+        initSearch()
+    }
+
+    private fun initSearch() {
+        binding.etSearch.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                val query = binding.etSearch.text.toString()
+                if (query.isEmpty()) {
+                    ToastUtils.show("Please type something to search", context)
+                    return@OnEditorActionListener false
+                }
+                viewModel.clearAll()
+                viewModel.query = binding.etSearch.text.toString()
+                viewModel.getPhotos()
+                return@OnEditorActionListener true
+            }
+            false
+        })
+
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.btnClearSearch.visibility =
+                    if (binding.etSearch.text.toString().isEmpty()) View.GONE else View.VISIBLE
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+        })
     }
 
     override fun liveEventsObservers() {
@@ -73,7 +110,10 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
     }
 
     override fun clickListeners() {
-
+        binding.btnClearSearch.setOnClickListener {
+            binding.etSearch.setText("")
+            binding.etSearch.requestFocus()
+        }
     }
 
     override fun onImageClick(model: ImageEntity, imageView: ImageView) {

@@ -16,7 +16,7 @@ class GalleryViewModel @Inject constructor(
     var apiRepository: ApiRepository
 ) : ViewModel() {
 
-    private var query = "nature"
+    var query = "nature"
     private var page = 1
     private var shouldFetchNextPage = true
     private var gridSizeLiveData: MutableLiveData<Int> = MutableLiveData()
@@ -83,6 +83,11 @@ class GalleryViewModel @Inject constructor(
             4 -> R.drawable.ic_grid_2
             else -> R.drawable.ic_grid_2
         }
+    }
+
+    fun clearAll() {
+        page = 1
+        photosArrayList.clear()
     }
 
 }
