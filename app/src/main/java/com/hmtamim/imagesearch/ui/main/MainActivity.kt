@@ -1,12 +1,26 @@
 package com.hmtamim.imagesearch.ui.main
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import com.hmtamim.imagesearch.R
+import com.hmtamim.imagesearch.databinding.ActivityMainBinding
+import com.hmtsoft.webcapture.ui.base.BaseActivity
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+@AndroidEntryPoint
+class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
+    MainViewModel::class.java,
+    R.layout.activity_main
+) {
+
+    override fun initViews() {
+
     }
+
+    override fun liveEventsObservers() {
+
+    }
+
+    override fun clickListeners() {
+
+    }
+
 }

@@ -1,10 +1,15 @@
 package com.hmtamim.imagesearch.data.room.entity
 
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "images_table")
 data class ImageEntity(
+
+    @PrimaryKey
+    @SerializedName("id")
+    val id: Int,
 
     @SerializedName("webformatHeight")
     val webformatHeight: Int,
@@ -53,9 +58,6 @@ data class ImageEntity(
 
     @SerializedName("pageURL")
     val pageURL: String,
-
-    @SerializedName("id")
-    val id: Int,
 
     @SerializedName("imageSize")
     val imageSize: Int,

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_home"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.hmtamim.imagesearch.ui.home.HomeFragment"
+        android:label="HomeFragment" />
+    <fragment
+        android:id="@+id/photoViewerFragment"
+        android:name="com.hmtamim.imagesearch.ui.photoViewer.PhotoViewerFragment"
+        android:label="PhotoViewerFragment" />
+    <fragment
+        android:id="@+id/galleryFragment"
+        android:name="com.hmtamim.imagesearch.ui.gallery.GalleryFragment"
+        android:label="GalleryFragment" />
+</navigation>

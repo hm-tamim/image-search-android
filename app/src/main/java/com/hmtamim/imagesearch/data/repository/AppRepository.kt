@@ -12,10 +12,11 @@ class AppRepository(private val historyDao: HistoryDao) {
     /** repository for history database actions*/
 
     fun getHistories(search: String?): LiveData<List<ImageEntity>> {
-        return if (search.isNullOrEmpty())
-            historyDao.getAll()
-        else
-            historyDao.getAll(search)
+        return historyDao.getAll()
+//        return if (search.isNullOrEmpty())
+//            historyDao.getAll()
+//        else
+//            historyDao.getAll(search)
     }
 
     @WorkerThread

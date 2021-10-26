@@ -3,7 +3,10 @@ package com.hmtamim.imagesearch.di
 import com.hmtamim.imagesearch.BuildConfig
 import com.hmtamim.imagesearch.data.remote.ApiClient
 import com.hmtamim.imagesearch.data.repository.ApiRepository
+import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -12,7 +15,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
+@Module
+@InstallIn(SingletonComponent::class)
 class NetworkModule {
+
+    /** dagger hilt dependency injection for MVVM architecture*/
 
     @Provides
     @Singleton
