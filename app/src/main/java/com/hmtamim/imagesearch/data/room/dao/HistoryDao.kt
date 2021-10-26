@@ -17,6 +17,9 @@ interface HistoryDao {
     @Insert(onConflict = REPLACE)
     suspend fun insert(entity: ImageEntity)
 
+    @Insert(onConflict = REPLACE)
+    suspend fun insertAll(entities: List<ImageEntity>)
+
     @Delete
     suspend fun delete(entity: ImageEntity)
 

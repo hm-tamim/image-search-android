@@ -20,12 +20,17 @@ class AppRepository(private val historyDao: HistoryDao) {
     }
 
     @WorkerThread
-    suspend fun insertHistory(entity: ImageEntity) = withContext(Dispatchers.IO) {
+    suspend fun insertPhotos(entity: ImageEntity) = withContext(Dispatchers.IO) {
         historyDao.insert(entity)
     }
 
     @WorkerThread
-    suspend fun deleteHistory(entity: ImageEntity) = withContext(Dispatchers.IO) {
+    suspend fun insertAllPhotos(entities: List<ImageEntity>) = withContext(Dispatchers.IO) {
+        historyDao.insertAll(entities)
+    }
+
+    @WorkerThread
+    suspend fun deletePhotos(entity: ImageEntity) = withContext(Dispatchers.IO) {
         historyDao.delete(entity)
     }
 

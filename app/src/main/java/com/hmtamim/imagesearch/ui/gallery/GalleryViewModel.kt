@@ -1,21 +1,21 @@
 package com.hmtamim.imagesearch.ui.gallery
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.hmtamim.imagesearch.R
 import com.hmtamim.imagesearch.data.repository.ApiRepository
+import com.hmtamim.imagesearch.data.repository.AppRepository
 import com.hmtamim.imagesearch.data.room.entity.ImageEntity
 import com.hmtamim.imagesearch.model.PhotosResponse
 import com.hmtamim.imagesearch.utils.ResponseListener
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class GalleryViewModel @Inject constructor(
-    var apiRepository: ApiRepository,
-    var savedStateHandle: SavedStateHandle
+    private var apiRepository: ApiRepository,
+    private var appRepository: AppRepository,
+    private var savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     var query = "nature"
@@ -43,6 +43,7 @@ class GalleryViewModel @Inject constructor(
 
         apiRepository.getImages(query, page, object : ResponseListener<PhotosResponse> {
             override fun onSuccess(response: PhotosResponse, statusCode: Int) {
+                insertPhotosToDatabase(response.hits)
                 photosArrayList.addAll(response.hits)
                 photosLiveList.value = photosArrayList
                 if (response.totalHits > photosArrayList.size)
@@ -55,6 +56,16 @@ class GalleryViewModel @Inject constructor(
 
             }
         })
+    }
+
+    fun insertPhotosToDatabase(list: List<ImageEntity>) {
+        viewModelScope.launch {
+            try {
+                appRepository.insertAllPhotos(list)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     fun getPhotosLiveData(): LiveData<List<ImageEntity>> {
@@ -92,6 +103,7 @@ class GalleryViewModel @Inject constructor(
 
     fun clearAll() {
         page = 1
+        shouldFetchNextPage = true
         photosArrayList.clear()
     }
 

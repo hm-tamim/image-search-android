@@ -11,6 +11,9 @@ data class ImageEntity(
     @SerializedName("id")
     val id: Int,
 
+    @SerializedName("query")
+    var query: String = "",
+
     @SerializedName("webformatHeight")
     val webformatHeight: Int,
 
@@ -75,5 +78,5 @@ data class ImageEntity(
     val likes: Int,
 
     @SerializedName("datetime")
-    val dateTime: Long
+    var dateTime: Long
 )
