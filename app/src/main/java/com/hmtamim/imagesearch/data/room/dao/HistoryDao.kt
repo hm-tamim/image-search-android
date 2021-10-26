@@ -6,23 +6,21 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
-import com.hmtamim.imagesearch.data.room.entity.HistoryEntity
+import com.hmtamim.imagesearch.data.room.entity.ImageEntity
 
 @Dao
 interface HistoryDao {
 
-    @Query("SELECT * FROM histories ORDER BY date DESC")
-    fun getAll(): LiveData<List<HistoryEntity>>
-
-    @Query("SELECT * FROM histories WHERE url LIKE '%' || :search || '%' ORDER BY date DESC")
-    fun getAll(search: String): LiveData<List<HistoryEntity>>
+    @Query("SELECT * FROM images_table ORDER BY dateTime DESC")
+    fun getAll(): LiveData<List<ImageEntity>>
 
     @Insert(onConflict = REPLACE)
-    suspend fun insert(entity: HistoryEntity)
+    suspend fun insert(entity: ImageEntity)
 
     @Delete
-    suspend fun delete(entity: HistoryEntity)
+    suspend fun delete(entity: ImageEntity)
 
-    @Query("DELETE FROM histories")
+    @Query("DELETE FROM images_table")
     suspend fun deleteAll()
+
 }

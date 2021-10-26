@@ -3,10 +3,10 @@ package com.hmtamim.imagesearch.data.room
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.hmtamim.imagesearch.data.room.dao.HistoryDao
-import com.hmtamim.imagesearch.data.room.entity.HistoryEntity
+import com.hmtamim.imagesearch.data.room.entity.ImageEntity
 
 @Database(
-    entities = [HistoryEntity::class],
+    entities = [ImageEntity::class],
     version = 1,
     exportSchema = false
 )

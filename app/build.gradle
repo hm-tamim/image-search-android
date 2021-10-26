@@ -22,12 +22,20 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", 'BASE_URL', "\"https://pixabay.com/\""
+            buildConfigField "String", 'API_KEY', "\"24040111-b402dd200ec58e239a0e78dea\""
+        }
+        debug {
+            buildConfigField "String", 'BASE_URL', "\"https://pixabay.com/\""
+            buildConfigField "String", 'API_KEY', "\"24040111-b402dd200ec58e239a0e78dea\""
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
@@ -35,7 +43,6 @@ android {
     buildFeatures{
         dataBinding true
     }
-
 }
 
 dependencies {
@@ -88,4 +95,19 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     kapt 'com.github.bumptech.glide:compiler:4.12.0'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
+
+    //epoxy
+    implementation "com.airbnb.android:epoxy:4.6.3"
+    implementation "com.airbnb.android:epoxy-databinding:4.3.1"
+    kapt "com.airbnb.android:epoxy-processor:4.6.3"
+
+    // retrofit client
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.okhttp3:okhttp:4.9.1"
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation "com.squareup.retrofit2:converter-scalars:2.9.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.9.1"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.9.0"
+    implementation "com.google.code.gson:gson:2.8.7"
+    implementation "io.grpc:grpc-okhttp:1.32.2"
 }
