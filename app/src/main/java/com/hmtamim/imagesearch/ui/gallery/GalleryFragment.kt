@@ -1,8 +1,12 @@
 package com.hmtamim.imagesearch.ui.gallery
 
 import android.os.Bundle
+import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.GridLayoutManager
 import com.hmtamim.imagesearch.R
 import com.hmtamim.imagesearch.data.room.entity.ImageEntity
@@ -24,7 +28,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
     }
 
     override fun initViews() {
-
+        postponeEnterTransition()
     }
 
     override fun liveEventsObservers() {
@@ -47,6 +51,9 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
     }
 
     override fun setupRecycler() {
+        controller.addModelBuildListener {
+            startPostponedEnterTransition()
+        }
         controller.spanCount = 2
         layoutManager = GridLayoutManager(context, 2)
         binding.recyclerView.layoutManager = layoutManager
@@ -69,10 +76,13 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
 
     }
 
-    override fun onImageClick(model: ImageEntity) {
+    override fun onImageClick(model: ImageEntity, imageView: ImageView) {
+        val extras = FragmentNavigatorExtras(
+            imageView to imageView.transitionName,
+        )
         val bundle = Bundle()
-        bundle.putString("image_url", model.previewURL)
-        navController?.navigate(R.id.photoViewerFragment, bundle)
+        bundle.putString("image_url", model.webformatURL)
+        navController?.navigate(R.id.photoViewerFragment, bundle, null, extras)
     }
 
 }

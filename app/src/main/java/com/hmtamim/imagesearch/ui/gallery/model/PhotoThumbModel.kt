@@ -29,10 +29,12 @@ abstract class PhotoThumbModel : DataBindingEpoxyModel() {
             Glide.with(binding.image)
                 .asBitmap()
                 .skipMemoryCache(false)
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .apply(RequestOptions().override(400, 400))
-                .load(it.previewURL)
+                .load(it.webformatURL)
                 .into(binding.image)
+
+            binding.image.transitionName = it.webformatURL
 
             binding.image.setOnClickListener(clickListener)
         }

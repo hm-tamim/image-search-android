@@ -5,13 +5,13 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Pluang"
-        android:name=".App">
+        android:theme="@style/Theme.Pluang">
         <activity
             android:name="com.hmtamim.imagesearch.ui.main.MainActivity"
             android:exported="true">
@@ -21,6 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.photoViewer.PhotoViewerFragment" />
+
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package com.hmtamim.imagesearch.ui.gallery.controller
 
+import android.widget.ImageView
 import com.airbnb.epoxy.EpoxyController
 import com.hmtamim.imagesearch.data.room.entity.ImageEntity
 import com.hmtamim.imagesearch.ui.gallery.model.EmptyModel_
@@ -22,7 +23,8 @@ class GalleryController(val clickListener: ClickListener) : EpoxyController() {
                 .id(it.id)
                 .model(it)
                 .clickListener { model, parentView, clickedView, position ->
-                    model.model()?.let { it1 -> clickListener.onImageClick(it1) }
+                    model.model()
+                        ?.let { it1 -> clickListener.onImageClick(it1, clickedView as ImageView) }
                 }
                 .addTo(this)
         }
@@ -46,6 +48,6 @@ class GalleryController(val clickListener: ClickListener) : EpoxyController() {
     }
 
     interface ClickListener {
-        fun onImageClick(model: ImageEntity)
+        fun onImageClick(model: ImageEntity, imageView: ImageView)
     }
 }
