@@ -36,7 +36,6 @@ abstract class PhotoThumbModel : DataBindingEpoxyModel() {
                 .into(binding.image)
 
             binding.image.transitionName = it.webformatURL
-
             binding.image.setOnClickListener(clickListener)
         }
 

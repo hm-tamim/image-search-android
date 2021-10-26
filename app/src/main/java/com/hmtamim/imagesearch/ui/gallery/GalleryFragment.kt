@@ -1,10 +1,12 @@
 package com.hmtamim.imagesearch.ui.gallery
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView.OnEditorActionListener
 import androidx.core.content.ContextCompat
@@ -55,6 +57,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
                 viewModel.clearAll()
                 viewModel.query = binding.etSearch.text.toString()
                 viewModel.getPhotos()
+                hideKeyboard()
                 return@OnEditorActionListener true
             }
             false
@@ -74,6 +77,17 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
 
             }
         })
+    }
+
+    fun hideKeyboard() {
+        binding.etSearch.postDelayed(Runnable {
+            val imm: InputMethodManager = requireContext()
+                .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(
+                binding.etSearch.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS
+            )
+        }, 50)
     }
 
     override fun liveEventsObservers() {
