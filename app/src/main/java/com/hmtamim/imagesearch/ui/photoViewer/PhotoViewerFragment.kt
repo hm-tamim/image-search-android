@@ -1,5 +1,7 @@
 package com.hmtamim.imagesearch.ui.photoViewer
 
+import androidx.lifecycle.Observer
+import com.bumptech.glide.Glide
 import com.hmtamim.imagesearch.R
 import com.hmtamim.imagesearch.databinding.FragmentHomeBinding
 import com.hmtamim.imagesearch.ui.base.BaseFragment
@@ -15,7 +17,11 @@ class PhotoViewerFragment : BaseFragment<FragmentHomeBinding, PhotoViewerViewMod
     }
 
     override fun liveEventsObservers() {
-
+        viewModel.getLivData().observe(viewLifecycleOwner, Observer {
+            Glide.with(this)
+                .load(it)
+                .into(binding.image)
+        })
     }
 
     override fun clickListeners() {

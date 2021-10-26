@@ -1,9 +1,11 @@
 package com.hmtamim.imagesearch.ui.gallery
 
+import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.hmtamim.imagesearch.R
+import com.hmtamim.imagesearch.data.room.entity.ImageEntity
 import com.hmtamim.imagesearch.databinding.FragmentGalleryBinding
 import com.hmtamim.imagesearch.ui.base.BaseFragment
 import com.hmtamim.imagesearch.ui.gallery.controller.GalleryController
@@ -14,11 +16,11 @@ import dagger.hilt.android.AndroidEntryPoint
 class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
     GalleryViewModel::class.java,
     R.layout.fragment_gallery
-) {
+), GalleryController.ClickListener {
 
     private lateinit var layoutManager: GridLayoutManager
     private val controller: GalleryController by lazy {
-        GalleryController()
+        GalleryController(this)
     }
 
     override fun initViews() {
@@ -52,8 +54,8 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
         binding.recyclerView.adapter = controller.adapter
         binding.recyclerView.addOnScrollListener(object : PaginationScrollListener(layoutManager) {
             override fun loadMoreItem() {
-//                if (controller.isLoading)
-//                    return
+                if (controller.isLoading)
+                    return
                 controller.isLoading = true
                 controller.requestModelBuild()
                 viewModel.getPhotos()
@@ -65,6 +67,12 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
 
     override fun clickListeners() {
 
+    }
+
+    override fun onImageClick(model: ImageEntity) {
+        val bundle = Bundle()
+        bundle.putString("image_url", model.previewURL)
+        navController?.navigate(R.id.photoViewerFragment, bundle)
     }
 
 }

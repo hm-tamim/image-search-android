@@ -11,6 +11,9 @@ import androidx.databinding.library.baseAdapters.BR
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import com.hmtamim.imagesearch.ui.main.MainActivity
 
 
 abstract class BaseFragment<DATA_BINDING : ViewDataBinding, VIEW_MODEL : ViewModel>(
@@ -22,7 +25,7 @@ abstract class BaseFragment<DATA_BINDING : ViewDataBinding, VIEW_MODEL : ViewMod
         ViewModelProvider(this).get(viewModelClassType)
     }
     protected lateinit var binding: DATA_BINDING
-    protected var bundle: Bundle? = null
+    protected var navController: NavController? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,10 +33,11 @@ abstract class BaseFragment<DATA_BINDING : ViewDataBinding, VIEW_MODEL : ViewMod
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, layout, container, false)
-        bundle = arguments
         binding.setVariable(BR.viewModel, viewModel)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.executePendingBindings()
+        if (requireActivity() is MainActivity)
+            navController = NavHostFragment.findNavController(this)
         return binding.root
     }
 

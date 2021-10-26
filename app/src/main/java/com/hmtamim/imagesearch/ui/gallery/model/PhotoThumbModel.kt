@@ -1,5 +1,6 @@
 package com.hmtamim.imagesearch.ui.gallery.model
 
+import android.view.View
 import androidx.databinding.ViewDataBinding
 import com.airbnb.epoxy.DataBindingEpoxyModel
 import com.airbnb.epoxy.EpoxyAttribute
@@ -17,6 +18,9 @@ abstract class PhotoThumbModel : DataBindingEpoxyModel() {
     @EpoxyAttribute
     var model: ImageEntity? = null
 
+    @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
+    lateinit var clickListener: View.OnClickListener
+
     override fun bind(holder: DataBindingHolder) {
         super.bind(holder)
         val binding = holder.dataBinding as ItemPhotoThumbBinding
@@ -29,6 +33,8 @@ abstract class PhotoThumbModel : DataBindingEpoxyModel() {
                 .apply(RequestOptions().override(400, 400))
                 .load(it.previewURL)
                 .into(binding.image)
+
+            binding.image.setOnClickListener(clickListener)
         }
 
     }
