@@ -7,6 +7,7 @@ import com.hmtamim.imagesearch.R
 import com.hmtamim.imagesearch.databinding.FragmentGalleryBinding
 import com.hmtamim.imagesearch.ui.base.BaseFragment
 import com.hmtamim.imagesearch.ui.gallery.controller.GalleryController
+import com.hmtamim.imagesearch.utils.PaginationScrollListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,11 +28,13 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
     override fun liveEventsObservers() {
         viewModel.getPhotosLiveData().observe(viewLifecycleOwner, Observer {
             controller.list = it
+            controller.isLoading = false
             controller.requestModelBuild()
         })
 
         viewModel.getGridSizeLiveData().observe(viewLifecycleOwner, Observer {
             layoutManager.spanCount = it
+            controller.spanCount = it
             binding.btnGrid.setImageDrawable(
                 ContextCompat.getDrawable(
                     requireContext(),
@@ -42,9 +45,22 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
     }
 
     override fun setupRecycler() {
+        controller.spanCount = 2
         layoutManager = GridLayoutManager(context, 2)
         binding.recyclerView.layoutManager = layoutManager
+        layoutManager.spanSizeLookup = controller.spanSizeLookup
         binding.recyclerView.adapter = controller.adapter
+        binding.recyclerView.addOnScrollListener(object : PaginationScrollListener(layoutManager) {
+            override fun loadMoreItem() {
+//                if (controller.isLoading)
+//                    return
+                controller.isLoading = true
+                controller.requestModelBuild()
+                viewModel.getPhotos()
+            }
+        })
+
+        controller.requestModelBuild()
     }
 
     override fun clickListeners() {

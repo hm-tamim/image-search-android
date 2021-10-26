@@ -16,18 +16,34 @@ class GalleryViewModel @Inject constructor(
     var apiRepository: ApiRepository
 ) : ViewModel() {
 
+    private var query = "nature"
+    private var page = 1
+    private var shouldFetchNextPage = true
     private var gridSizeLiveData: MutableLiveData<Int> = MutableLiveData()
     private val photosLiveList: MutableLiveData<List<ImageEntity>> = MutableLiveData()
+    private val photosArrayList: MutableList<ImageEntity> = ArrayList()
 
     init {
+        page = 1
         gridSizeLiveData.value = 2
         getPhotos()
     }
 
     fun getPhotos() {
-        apiRepository.getImages(object : ResponseListener<PhotosResponse> {
+
+        if (!shouldFetchNextPage) {
+            photosLiveList.value = photosArrayList
+            return
+        }
+
+        apiRepository.getImages(query, page, object : ResponseListener<PhotosResponse> {
             override fun onSuccess(response: PhotosResponse, statusCode: Int) {
-                photosLiveList.value = response.hits
+                photosArrayList.addAll(response.hits)
+                photosLiveList.value = photosArrayList
+                if (response.totalHits > photosArrayList.size)
+                    page++
+                else
+                    shouldFetchNextPage = false
             }
 
             override fun onError(errorBody: String, errorCode: Int) {

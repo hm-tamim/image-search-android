@@ -1,5 +1,6 @@
 package com.hmtamim.imagesearch.data.repository
 
+import com.hmtamim.imagesearch.BuildConfig
 import com.hmtamim.imagesearch.data.remote.ApiClient
 import com.hmtamim.imagesearch.model.PhotosResponse
 import com.hmtamim.imagesearch.utils.ResponseListener
@@ -11,8 +12,8 @@ class ApiRepository(var apiClient: ApiClient) {
 
     /** repository for all APIs*/
 
-    fun getImages(listener: ResponseListener<PhotosResponse>) {
-        apiClient.getImages().enqueue(object : Callback<PhotosResponse> {
+    fun getImages(query: String, page: Int, listener: ResponseListener<PhotosResponse>) {
+        apiClient.getImages(BuildConfig.API_KEY, "photo", "popular", "40", query, page).enqueue(object : Callback<PhotosResponse> {
             override fun onResponse(
                 call: Call<PhotosResponse>,
                 response: Response<PhotosResponse>

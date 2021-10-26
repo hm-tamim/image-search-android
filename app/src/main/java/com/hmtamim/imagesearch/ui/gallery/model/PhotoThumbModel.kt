@@ -15,19 +15,22 @@ import com.hmtamim.imagesearch.databinding.ItemPhotoThumbBinding
 abstract class PhotoThumbModel : DataBindingEpoxyModel() {
 
     @EpoxyAttribute
-    lateinit var model: ImageEntity
+    var model: ImageEntity? = null
 
     override fun bind(holder: DataBindingHolder) {
         super.bind(holder)
         val binding = holder.dataBinding as ItemPhotoThumbBinding
 
-        Glide.with(binding.image)
-            .asBitmap()
-            .skipMemoryCache(false)
-            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-            .apply(RequestOptions().override(400, 400))
-            .load(model.webformatURL)
-            .into(binding.image)
+        model?.let {
+            Glide.with(binding.image)
+                .asBitmap()
+                .skipMemoryCache(false)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .apply(RequestOptions().override(400, 400))
+                .load(it.previewURL)
+                .into(binding.image)
+        }
+
     }
 
     override fun setDataBindingVariables(binding: ViewDataBinding?) {
