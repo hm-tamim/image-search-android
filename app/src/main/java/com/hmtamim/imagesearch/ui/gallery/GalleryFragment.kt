@@ -186,6 +186,10 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
             binding.etSearch.setText("")
             binding.etSearch.openKeyboard()
         }
+
+        binding.btnBack.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
     }
 
     override fun onImageClick(model: ImageEntity, imageView: ImageView, position: Int) {
