@@ -21,7 +21,7 @@ abstract class BaseFragment<DATA_BINDING : ViewDataBinding, VIEW_MODEL : ViewMod
     @LayoutRes private val layout: Int
 ) : Fragment() {
 
-    protected val viewModel: VIEW_MODEL by lazy {
+    val viewModel: VIEW_MODEL by lazy {
         ViewModelProvider(this).get(viewModelClassType)
     }
     protected lateinit var binding: DATA_BINDING

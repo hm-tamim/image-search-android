@@ -26,7 +26,7 @@ class GalleryViewModel @Inject constructor(
     var query = "nature" // default search term for dummy images
     private var page = 1
     private var shouldFetchNextPage = true
-    private var gridSizeLiveData: MutableLiveData<Int> = MutableLiveData()
+    val gridSizeLiveData: MutableLiveData<Int> = MutableLiveData()
     private val photosLiveList: MutableLiveData<List<ImageEntity>> = MutableLiveData()
     val hideLoadingBar: SingleLiveEvent<Void> = SingleLiveEvent()
     val photosArrayList: MutableList<ImageEntity> = ArrayList()
