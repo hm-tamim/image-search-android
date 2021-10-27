@@ -7,6 +7,7 @@ import com.hmtamim.imagesearch.data.repository.AppRepository
 import com.hmtamim.imagesearch.data.room.entity.ImageEntity
 import com.hmtamim.imagesearch.model.PhotosResponse
 import com.hmtamim.imagesearch.utils.ResponseListener
+import com.hmtamim.imagesearch.utils.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,7 +24,9 @@ class GalleryViewModel @Inject constructor(
     private var shouldFetchNextPage = true
     private var gridSizeLiveData: MutableLiveData<Int> = MutableLiveData()
     private val photosLiveList: MutableLiveData<List<ImageEntity>> = MutableLiveData()
+    val hideLoadingBar: SingleLiveEvent<Void> = SingleLiveEvent()
     val photosArrayList: MutableList<ImageEntity> = ArrayList()
+    var isOffline = true
 
     init {
         page = 1
@@ -31,13 +34,20 @@ class GalleryViewModel @Inject constructor(
         if (savedStateHandle.contains("query")) {
             query = savedStateHandle.get<String>("query").toString()
         }
+
         getPhotos()
     }
 
     fun getPhotos() {
+        if (isOffline)
+            getPhotosFromDatabase()
+        else
+            getPhotosFromApi()
+    }
 
+    private fun getPhotosFromApi() {
         if (!shouldFetchNextPage) {
-            photosLiveList.value = photosArrayList
+            hideLoadingBar.call()
             return
         }
 
@@ -56,6 +66,19 @@ class GalleryViewModel @Inject constructor(
 
             }
         })
+    }
+
+    private fun getPhotosFromDatabase() {
+        if (!shouldFetchNextPage) {
+            hideLoadingBar.call()
+            return
+        }
+        viewModelScope.launch {
+            photosArrayList.clear()
+            photosArrayList.addAll(appRepository.getAllPhotos(query))
+            photosLiveList.postValue(photosArrayList)
+            shouldFetchNextPage = false
+        }
     }
 
     fun insertPhotosToDatabase(list: List<ImageEntity>) {

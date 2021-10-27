@@ -13,7 +13,6 @@ import android.widget.ImageView
 import android.widget.TextView.OnEditorActionListener
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -48,7 +47,6 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
     }
 
     private fun initTransitions() {
-
         exitTransition =
             TransitionInflater.from(context).inflateTransition(R.transition.exit_gallery)
 
@@ -79,7 +77,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
 
     private fun initSearch() {
         binding.etSearch.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
                 val query = binding.etSearch.text.toString()
                 if (query.isEmpty()) {
                     ToastUtils.show("Please type something to search", context)
@@ -110,7 +108,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
         })
     }
 
-    fun hideKeyboard() {
+    private fun hideKeyboard() {
         binding.etSearch.postDelayed(Runnable {
             val imm: InputMethodManager = requireContext()
                 .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -122,13 +120,18 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
     }
 
     override fun liveEventsObservers() {
-        viewModel.getPhotosLiveData().observe(viewLifecycleOwner, Observer {
+        viewModel.hideLoadingBar.observe(viewLifecycleOwner) {
+            controller.isLoading = false
+            controller.requestModelBuild()
+        }
+
+        viewModel.getPhotosLiveData().observe(viewLifecycleOwner) {
             controller.list = it
             controller.isLoading = false
             controller.requestModelBuild()
-        })
+        }
 
-        viewModel.getGridSizeLiveData().observe(viewLifecycleOwner, Observer {
+        viewModel.getGridSizeLiveData().observe(viewLifecycleOwner) {
             layoutManager.spanCount = it
             controller.spanCount = it
             binding.btnGrid.setImageDrawable(
@@ -137,8 +140,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
                     viewModel.getGridImageDrawable(it)
                 )
             )
-        })
-
+        }
     }
 
     override fun setupRecycler() {

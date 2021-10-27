@@ -22,9 +22,10 @@ class ApiRepository(var apiClient: ApiClient) {
                 ) {
                     response.body()?.let {
                         // insert the search keyword and time to search for offline search
-                        val dateTime = Calendar.getInstance().timeInMillis
+                        var counter = 0
                         it.hits.forEach { item ->
                             item.query = query
+                            val dateTime = Calendar.getInstance().timeInMillis + (counter++)
                             item.dateTime = dateTime
                         }
                         listener.onSuccess(it, response.code())
