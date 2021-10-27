@@ -112,6 +112,13 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
     }
 
     override fun liveEventsObservers() {
+
+        viewModel.networkConnectionObserver.observe(viewLifecycleOwner) {
+            viewModel.isOffline = !it
+            controller.isOffline = !it
+            controller.requestModelBuild()
+        }
+
         viewModel.hideLoadingBar.observe(viewLifecycleOwner) {
             controller.isLoading = false
             controller.requestModelBuild()
@@ -136,6 +143,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
     }
 
     override fun setupRecycler() {
+        controller.isOffline = viewModel.isOffline
         controller.addModelBuildListener {
             startPostponedEnterTransition()
         }

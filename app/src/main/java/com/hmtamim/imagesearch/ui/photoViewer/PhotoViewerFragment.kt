@@ -1,5 +1,7 @@
 package com.hmtamim.imagesearch.ui.photoViewer
 
+import android.content.Intent
+import android.net.Uri
 import android.transition.TransitionInflater
 import android.view.View
 import androidx.fragment.app.activityViewModels
@@ -43,8 +45,9 @@ class PhotoViewerFragment : BaseFragment<FragmentPhotoViewerBinding, PhotoViewer
                 sharedElements: MutableMap<String, View>
             ) {
                 super.onMapSharedElements(names, sharedElements)
-                val current = controller.adapter.boundViewHolders.getHolderForModel(
-                    controller.adapter.getModelAtPosition(binding.viewPager.currentItem)
+                val adapter = controller.adapter
+                val current = adapter.boundViewHolders.getHolderForModel(
+                    adapter.getModelAtPosition(binding.viewPager.currentItem)
                 )
                 if (current != null) {
                     sharedElements[names[0]] = current.itemView.findViewById(R.id.image)
@@ -68,7 +71,7 @@ class PhotoViewerFragment : BaseFragment<FragmentPhotoViewerBinding, PhotoViewer
     }
 
     override fun liveEventsObservers() {
-        mainViewModel.photosLiveList.observe(viewLifecycleOwner, Observer {list ->
+        mainViewModel.photosLiveList.observe(viewLifecycleOwner, Observer { list ->
             list?.let {
                 controller.list = it
                 controller.requestModelBuild()
@@ -80,6 +83,11 @@ class PhotoViewerFragment : BaseFragment<FragmentPhotoViewerBinding, PhotoViewer
     override fun clickListeners() {
         binding.back.setOnClickListener {
             requireActivity().onBackPressed()
+        }
+
+        binding.download.setOnClickListener {
+            val selectedImage = controller.list[binding.viewPager.currentItem]
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(selectedImage.largeImageURL)))
         }
     }
 

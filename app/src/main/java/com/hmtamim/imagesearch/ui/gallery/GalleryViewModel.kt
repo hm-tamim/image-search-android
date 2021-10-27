@@ -23,7 +23,7 @@ class GalleryViewModel @Inject constructor(
     private var appRepository: AppRepository,
     private var savedStateHandle: SavedStateHandle,
     @Named("network_connection_livedata")
-    private var networkConnectionObserver: NetworkConnectionObserver
+    var networkConnectionObserver: NetworkConnectionObserver
 ) : ViewModel() {
 
     var query = "nature" // default search term for dummy images
@@ -36,18 +36,14 @@ class GalleryViewModel @Inject constructor(
     var isOffline: Boolean = false
 
     init {
-
-        // set current network status and observe for future changes
+        // set current network status
         networkConnectionObserver.value?.let { isOffline = !it }
-        viewModelScope.launch { networkConnectionObserver.asFlow().collect { isOffline = !it } }
 
         // default values
         page = 1
         gridSizeLiveData.value = 2
-        if (savedStateHandle.contains("query")) {
+        if (savedStateHandle.contains("query"))
             query = savedStateHandle.get<String>("query").toString()
-        }
-
         getPhotos()
     }
 

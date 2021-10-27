@@ -12,8 +12,6 @@ import javax.inject.Named
 @HiltViewModel
 class MainViewModel @Inject constructor(
     val appRepository: AppRepository,
-    @Named("network_connection_livedata")
-    var networkConnectionObserver: NetworkConnectionObserver
 ) : ViewModel() {
 
     var selectedImagePosition = 0

@@ -5,18 +5,25 @@ import com.airbnb.epoxy.EpoxyController
 import com.hmtamim.imagesearch.data.room.entity.ImageEntity
 import com.hmtamim.imagesearch.ui.gallery.model.EmptyModel_
 import com.hmtamim.imagesearch.ui.gallery.model.LoadingModel_
+import com.hmtamim.imagesearch.ui.gallery.model.OfflineIndicatorModel_
 import com.hmtamim.imagesearch.ui.gallery.model.PhotoThumbModel_
 
 class GalleryController(val clickListener: ClickListener) : EpoxyController() {
 
     var isLoading = true
     var list: List<ImageEntity> = ArrayList()
+    var isOffline = false
 
     init {
         setFilterDuplicates(true)
     }
 
     override fun buildModels() {
+
+        OfflineIndicatorModel_()
+            .id("offline_indicator_model")
+            .spanSizeOverride { totalSpanCount, position, itemCount -> spanCount }
+            .addIf(isOffline, this)
 
         list.forEach {
             PhotoThumbModel_()

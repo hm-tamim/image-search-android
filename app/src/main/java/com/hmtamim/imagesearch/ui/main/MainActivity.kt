@@ -17,9 +17,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     override fun liveEventsObservers() {
-        viewModel.networkConnectionObserver.observe(this, Observer {
 
-        })
     }
 
     override fun clickListeners() {

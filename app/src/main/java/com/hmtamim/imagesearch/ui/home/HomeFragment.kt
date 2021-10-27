@@ -16,6 +16,7 @@ import com.hmtamim.imagesearch.ui.base.BaseFragment
 import com.hmtamim.imagesearch.utils.ToastUtils
 import com.hmtamim.imagesearch.utils.openKeyboard
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Observer
 
 
 @AndroidEntryPoint
@@ -66,7 +67,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
     }
 
     override fun liveEventsObservers() {
+        viewModel.networkConnectionObserver.observe(viewLifecycleOwner) {
 
+        }
     }
 
     override fun clickListeners() {
