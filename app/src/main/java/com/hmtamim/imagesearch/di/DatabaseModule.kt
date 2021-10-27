@@ -28,16 +28,5 @@ class DatabaseModule {
             .fallbackToDestructiveMigration()
             .build()
 
-    @Provides
-    @Singleton
-    fun provideHistoryDao(appDatabase: AppDatabase): HistoryDao {
-        return appDatabase.historyDao();
-    }
-
-    @Provides
-    @Singleton
-    fun provideAppRepository(historyDao: HistoryDao): AppRepository {
-        return AppRepository(historyDao);
-    }
 
 }

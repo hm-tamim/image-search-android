@@ -10,13 +10,10 @@ import com.hmtamim.imagesearch.utils.NetworkConnectionObserver
 import com.hmtamim.imagesearch.utils.ResponseListener
 import com.hmtamim.imagesearch.utils.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
 
-@InternalCoroutinesApi
 @HiltViewModel
 class GalleryViewModel @Inject constructor(
     private var apiRepository: ApiRepository,

@@ -11,8 +11,8 @@ import com.hmtamim.imagesearch.data.room.entity.ImageEntity
 @Dao
 interface HistoryDao {
 
-    @Query("SELECT * FROM images_table ORDER BY dateTime DESC")
-    fun getAll(): LiveData<List<ImageEntity>>
+    @Query("SELECT * FROM images_table WHERE `query` LIKE '%' || :search || '%' ORDER BY dateTime ASC")
+    fun getAll(search: String): LiveData<List<ImageEntity>>
 
     @Query("SELECT * FROM images_table WHERE `query` LIKE '%' || :search || '%' ORDER BY dateTime ASC")
     suspend fun getAllList(search: String): List<ImageEntity>

@@ -7,7 +7,7 @@ import com.hmtamim.imagesearch.data.room.entity.ImageEntity
 
 @Database(
     entities = [ImageEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

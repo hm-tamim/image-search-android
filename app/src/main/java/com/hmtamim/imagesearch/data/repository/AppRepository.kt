@@ -11,17 +11,17 @@ class AppRepository(private val historyDao: HistoryDao) {
 
     /** repository for history database actions*/
 
-    fun getAllPhotosLive(search: String?): LiveData<List<ImageEntity>> {
-        return historyDao.getAll()
+    fun getAllPhotosLive(query: String): LiveData<List<ImageEntity>> {
+        return historyDao.getAll(query)
     }
 
     @WorkerThread
-    suspend fun getAllPhotos(search: String): List<ImageEntity> {
-        return historyDao.getAllList(search)
+    suspend fun getAllPhotos(query: String): List<ImageEntity> {
+        return historyDao.getAllList(query)
     }
 
     @WorkerThread
-    suspend fun insertPhotos(entity: ImageEntity) = withContext(Dispatchers.IO) {
+    suspend fun insertPhoto(entity: ImageEntity) = withContext(Dispatchers.IO) {
         historyDao.insert(entity)
     }
 
@@ -31,7 +31,7 @@ class AppRepository(private val historyDao: HistoryDao) {
     }
 
     @WorkerThread
-    suspend fun deletePhotos(entity: ImageEntity) = withContext(Dispatchers.IO) {
+    suspend fun deletePhoto(entity: ImageEntity) = withContext(Dispatchers.IO) {
         historyDao.delete(entity)
     }
 

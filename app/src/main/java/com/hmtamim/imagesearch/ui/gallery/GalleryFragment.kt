@@ -25,10 +25,8 @@ import com.hmtamim.imagesearch.utils.ToastUtils
 import com.hmtamim.imagesearch.utils.hideKeyboard
 import com.hmtamim.imagesearch.utils.openKeyboard
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.InternalCoroutinesApi
 
 
-@OptIn(InternalCoroutinesApi::class)
 @AndroidEntryPoint
 class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
     GalleryViewModel::class.java,
