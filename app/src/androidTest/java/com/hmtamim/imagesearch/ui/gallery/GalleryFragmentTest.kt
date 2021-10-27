@@ -30,7 +30,7 @@ class GalleryFragmentTest {
     }
 
     @Test
-    fun isHomePageFragmentVisible() {
+    fun isGalleryFragmentVisible() {
         launchFragmentInHiltContainer<GalleryFragment> {
 
         }
