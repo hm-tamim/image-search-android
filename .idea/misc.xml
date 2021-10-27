@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Tamim/StudioProjects/pluang/app/src/main/res/drawable/bg_fafafa.xml" value="0.2675" />
+        <entry key="..\:/Users/Tamim/StudioProjects/pluang/app/src/main/res/drawable/btn_dark_circle.xml" value="0.2675" />
+        <entry key="..\:/Users/Tamim/StudioProjects/pluang/app/src/main/res/drawable/ic_back.xml" value="0.2675" />
         <entry key="..\:/Users/Tamim/StudioProjects/pluang/app/src/main/res/drawable/ic_close.xml" value="0.2675" />
         <entry key="..\:/Users/Tamim/StudioProjects/pluang/app/src/main/res/drawable/ic_grid_2.xml" value="0.2675" />
         <entry key="..\:/Users/Tamim/StudioProjects/pluang/app/src/main/res/drawable/ic_grid_3.xml" value="0.2675" />
@@ -16,6 +18,7 @@
         <entry key="..\:/Users/Tamim/StudioProjects/pluang/app/src/main/res/layout/fragment_home.xml" value="0.4" />
         <entry key="..\:/Users/Tamim/StudioProjects/pluang/app/src/main/res/layout/fragment_photo_viewer.xml" value="0.4" />
         <entry key="..\:/Users/Tamim/StudioProjects/pluang/app/src/main/res/layout/item_empty.xml" value="0.264" />
+        <entry key="..\:/Users/Tamim/StudioProjects/pluang/app/src/main/res/layout/item_image_preview.xml" value="0.4" />
         <entry key="..\:/Users/Tamim/StudioProjects/pluang/app/src/main/res/layout/item_loading.xml" value="0.4" />
         <entry key="..\:/Users/Tamim/StudioProjects/pluang/app/src/main/res/layout/item_photo_thumb.xml" value="0.4" />
       </map>

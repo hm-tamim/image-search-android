@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView.OnEditorActionListener
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.GridLayoutManager
@@ -18,6 +19,7 @@ import com.hmtamim.imagesearch.data.room.entity.ImageEntity
 import com.hmtamim.imagesearch.databinding.FragmentGalleryBinding
 import com.hmtamim.imagesearch.ui.base.BaseFragment
 import com.hmtamim.imagesearch.ui.gallery.controller.GalleryController
+import com.hmtamim.imagesearch.ui.main.MainViewModel
 import com.hmtamim.imagesearch.utils.PaginationScrollListener
 import com.hmtamim.imagesearch.utils.ToastUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,6 +30,8 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
     R.layout.fragment_gallery
 ), GalleryController.ClickListener {
 
+    // shared activity ViewModel send the images in photo viewer fragment viewpager
+    val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var layoutManager: GridLayoutManager
     private val controller: GalleryController by lazy {
         GalleryController(this)
@@ -139,12 +143,14 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
         }
     }
 
-    override fun onImageClick(model: ImageEntity, imageView: ImageView) {
+    override fun onImageClick(model: ImageEntity, imageView: ImageView, position: Int) {
+        mainViewModel.photosLiveList.value = viewModel.photosArrayList
         val extras = FragmentNavigatorExtras(
             imageView to imageView.transitionName,
         )
         val bundle = Bundle()
         bundle.putString("image_url", model.webformatURL)
+        bundle.putInt("image_position", position)
         navController?.navigate(R.id.photoViewerFragment, bundle, null, extras)
     }
 

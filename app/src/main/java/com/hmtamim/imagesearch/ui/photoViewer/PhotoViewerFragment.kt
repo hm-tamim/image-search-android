@@ -1,18 +1,15 @@
 package com.hmtamim.imagesearch.ui.photoViewer
 
-import android.graphics.drawable.Drawable
 import android.transition.TransitionInflater
-import android.widget.ImageView
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
+import androidx.viewpager2.widget.ViewPager2
 import com.hmtamim.imagesearch.R
 import com.hmtamim.imagesearch.databinding.FragmentPhotoViewerBinding
 import com.hmtamim.imagesearch.ui.base.BaseFragment
+import com.hmtamim.imagesearch.ui.main.MainViewModel
+import com.hmtamim.imagesearch.ui.photoViewer.controller.ImageViewPagerController
+import com.hmtamim.imagesearch.utils.ToastUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -20,9 +17,20 @@ import dagger.hilt.android.AndroidEntryPoint
 class PhotoViewerFragment : BaseFragment<FragmentPhotoViewerBinding, PhotoViewerViewModel>(
     PhotoViewerViewModel::class.java,
     R.layout.fragment_photo_viewer
-) {
+), ImageViewPagerController.ControllerListener {
+
+    // sharing photo list with a common shared activity ViewModel
+    val mainViewModel: MainViewModel by activityViewModels()
+    var selectedPosition = 0
+    private val controller: ImageViewPagerController by lazy {
+        ImageViewPagerController(this)
+    }
 
     override fun initViews() {
+        arguments?.let {
+            if (it.containsKey("image_position"))
+                selectedPosition = it.getInt("image_position")
+        }
         postponeEnterTransition()
         sharedElementEnterTransition =
             TransitionInflater.from(context).inflateTransition(R.transition.shared_image)
@@ -30,57 +38,54 @@ class PhotoViewerFragment : BaseFragment<FragmentPhotoViewerBinding, PhotoViewer
             TransitionInflater.from(context).inflateTransition(R.transition.shared_image)
     }
 
-    override fun liveEventsObservers() {
-        viewModel.getLivData().observe(this, Observer {
-            binding.image.transitionName = it
-            binding.image.loadWithTransitionCallback(it, true) {
-                startPostponedEnterTransition()
+    override fun setupRecycler() {
+//        controller.addModelBuildListener {
+//            startPostponedEnterTransition()
+//        }
+        binding.viewPager.adapter = controller.adapter
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
             }
         })
     }
 
-    override fun clickListeners() {
+    override fun liveEventsObservers() {
 
+        mainViewModel.photosLiveList.observe(viewLifecycleOwner, Observer {
+            controller.list = it
+            controller.requestModelBuild()
+            binding.viewPager.setCurrentItem(selectedPosition, false)
+            startPostponedEnterTransition()
+        })
+
+//        viewModel.getLivData().observe(this, Observer {
+//            binding.image.transitionName = it
+//            binding.image.loadWithTransitionCallback(it, true) {
+//                startPostponedEnterTransition()
+//            }
+//        })
     }
 
-    private fun ImageView.loadWithTransitionCallback(
-        url: String,
-        loadOnlyFromCache: Boolean = false,
-        onLoadingFinished: () -> Unit = {}
-    ) {
-
-        val listener = object : RequestListener<Drawable> {
-            override fun onLoadFailed(
-                e: GlideException?,
-                model: Any?,
-                target: Target<Drawable>?,
-                isFirstResource: Boolean
-            ): Boolean {
-                onLoadingFinished()
-                return false
-            }
-
-            override fun onResourceReady(
-                resource: Drawable?,
-                model: Any?,
-                target: Target<Drawable>?,
-                dataSource: DataSource?,
-                isFirstResource: Boolean
-            ): Boolean {
-                onLoadingFinished()
-                return false
-            }
+    override fun clickListeners() {
+        binding.back.setOnClickListener {
+            requireActivity().onBackPressed()
         }
+    }
 
-        val requestOptions = RequestOptions.placeholderOf(R.drawable.bg_placeholder)
-            .dontTransform()
-            .onlyRetrieveFromCache(loadOnlyFromCache)
+    override fun startTransition() {
+        startPostponedEnterTransition()
+    }
 
-        Glide.with(this)
-            .load(url)
-            .apply(requestOptions)
-            .listener(listener)
-            .into(this)
+    // clear photos list from shared ViewModel when photo previewer is closed
+    override fun onDestroy() {
+        super.onDestroy()
+        mainViewModel.photosLiveList.value = null
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mainViewModel.photosLiveList.value = null
     }
 
 }

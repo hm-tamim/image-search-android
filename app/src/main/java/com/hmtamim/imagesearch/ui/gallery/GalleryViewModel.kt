@@ -23,7 +23,7 @@ class GalleryViewModel @Inject constructor(
     private var shouldFetchNextPage = true
     private var gridSizeLiveData: MutableLiveData<Int> = MutableLiveData()
     private val photosLiveList: MutableLiveData<List<ImageEntity>> = MutableLiveData()
-    private val photosArrayList: MutableList<ImageEntity> = ArrayList()
+    val photosArrayList: MutableList<ImageEntity> = ArrayList()
 
     init {
         page = 1

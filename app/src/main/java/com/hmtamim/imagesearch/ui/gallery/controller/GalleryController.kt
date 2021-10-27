@@ -24,7 +24,13 @@ class GalleryController(val clickListener: ClickListener) : EpoxyController() {
                 .model(it)
                 .clickListener { model, parentView, clickedView, position ->
                     model.model()
-                        ?.let { it1 -> clickListener.onImageClick(it1, clickedView as ImageView) }
+                        ?.let { it1 ->
+                            clickListener.onImageClick(
+                                it1,
+                                clickedView as ImageView,
+                                position
+                            )
+                        }
                 }
                 .addTo(this)
         }
@@ -49,6 +55,6 @@ class GalleryController(val clickListener: ClickListener) : EpoxyController() {
     }
 
     interface ClickListener {
-        fun onImageClick(model: ImageEntity, imageView: ImageView)
+        fun onImageClick(model: ImageEntity, imageView: ImageView, position: Int)
     }
 }
