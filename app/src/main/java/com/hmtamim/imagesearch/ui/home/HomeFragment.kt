@@ -14,6 +14,7 @@ import com.hmtamim.imagesearch.R
 import com.hmtamim.imagesearch.databinding.FragmentHomeBinding
 import com.hmtamim.imagesearch.ui.base.BaseFragment
 import com.hmtamim.imagesearch.utils.ToastUtils
+import com.hmtamim.imagesearch.utils.openKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -29,12 +30,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
     private fun initSearch() {
 
         // open keyboard automatically for better user experience
-        binding.etSearch.postDelayed(Runnable {
-            binding.etSearch.requestFocus()
-            val imm =
-                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showSoftInput(binding.etSearch, 0);
-        }, 200)
+        binding.etSearch.openKeyboard()
 
         // listen to search click and open perform search on gallery fragment
         binding.etSearch.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
@@ -76,15 +72,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
     override fun clickListeners() {
         binding.btnClearSearch.setOnClickListener {
             binding.etSearch.setText("")
-            binding.etSearch.requestFocus()
-        }
-    }
-
-    fun EditText.showKeyboard() {
-        if (requestFocus()) {
-            (activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-                .showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
-            setSelection(text.length)
+            binding.etSearch.openKeyboard()
         }
     }
 

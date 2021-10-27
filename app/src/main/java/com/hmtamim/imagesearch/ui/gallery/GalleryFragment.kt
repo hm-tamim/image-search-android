@@ -1,6 +1,5 @@
 package com.hmtamim.imagesearch.ui.gallery
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,7 +7,6 @@ import android.transition.TransitionInflater
 import android.view.View
 import android.view.View.OnLayoutChangeListener
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView.OnEditorActionListener
 import androidx.core.content.ContextCompat
@@ -24,9 +22,13 @@ import com.hmtamim.imagesearch.ui.gallery.controller.GalleryController
 import com.hmtamim.imagesearch.ui.main.MainViewModel
 import com.hmtamim.imagesearch.utils.PaginationScrollListener
 import com.hmtamim.imagesearch.utils.ToastUtils
+import com.hmtamim.imagesearch.utils.hideKeyboard
+import com.hmtamim.imagesearch.utils.openKeyboard
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.InternalCoroutinesApi
 
 
+@OptIn(InternalCoroutinesApi::class)
 @AndroidEntryPoint
 class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
     GalleryViewModel::class.java,
@@ -42,8 +44,8 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
 
     override fun initViews() {
         initTransitions()
-        checkArguments()
         initSearch()
+        checkArguments()
     }
 
     private fun initTransitions() {
@@ -85,8 +87,9 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
                 }
                 viewModel.clearAll()
                 viewModel.query = binding.etSearch.text.toString()
+                controller.isLoading = true
                 viewModel.getPhotos()
-                hideKeyboard()
+                binding.etSearch.hideKeyboard()
                 return@OnEditorActionListener true
             }
             false
@@ -106,17 +109,6 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
 
             }
         })
-    }
-
-    private fun hideKeyboard() {
-        binding.etSearch.postDelayed(Runnable {
-            val imm: InputMethodManager = requireContext()
-                .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(
-                binding.etSearch.windowToken,
-                InputMethodManager.HIDE_NOT_ALWAYS
-            )
-        }, 50)
     }
 
     override fun liveEventsObservers() {
@@ -192,7 +184,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
     override fun clickListeners() {
         binding.btnClearSearch.setOnClickListener {
             binding.etSearch.setText("")
-            binding.etSearch.requestFocus()
+            binding.etSearch.openKeyboard()
         }
     }
 

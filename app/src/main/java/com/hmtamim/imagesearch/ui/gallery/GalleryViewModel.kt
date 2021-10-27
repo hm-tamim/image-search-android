@@ -1,22 +1,30 @@
 package com.hmtamim.imagesearch.ui.gallery
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.hmtamim.imagesearch.R
 import com.hmtamim.imagesearch.data.repository.ApiRepository
 import com.hmtamim.imagesearch.data.repository.AppRepository
 import com.hmtamim.imagesearch.data.room.entity.ImageEntity
 import com.hmtamim.imagesearch.model.PhotosResponse
+import com.hmtamim.imagesearch.utils.NetworkConnectionObserver
 import com.hmtamim.imagesearch.utils.ResponseListener
 import com.hmtamim.imagesearch.utils.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
+@InternalCoroutinesApi
 @HiltViewModel
 class GalleryViewModel @Inject constructor(
     private var apiRepository: ApiRepository,
     private var appRepository: AppRepository,
-    private var savedStateHandle: SavedStateHandle
+    private var savedStateHandle: SavedStateHandle,
+    @Named("network_connection_livedata")
+    private var networkConnectionObserver: NetworkConnectionObserver
 ) : ViewModel() {
 
     var query = "nature"
@@ -26,9 +34,16 @@ class GalleryViewModel @Inject constructor(
     private val photosLiveList: MutableLiveData<List<ImageEntity>> = MutableLiveData()
     val hideLoadingBar: SingleLiveEvent<Void> = SingleLiveEvent()
     val photosArrayList: MutableList<ImageEntity> = ArrayList()
-    var isOffline = true
+    var isOffline: Boolean = true
 
     init {
+        viewModelScope.launch {
+            networkConnectionObserver.asFlow().collect {
+                isOffline = !it
+                Log.e("hmtz", "isOffline: ${isOffline}")
+            }
+        }
+
         page = 1
         gridSizeLiveData.value = 2
         if (savedStateHandle.contains("query")) {
@@ -128,6 +143,7 @@ class GalleryViewModel @Inject constructor(
         page = 1
         shouldFetchNextPage = true
         photosArrayList.clear()
+        photosLiveList.value = photosArrayList
     }
 
 }

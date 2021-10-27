@@ -1,11 +1,14 @@
 package com.hmtamim.imagesearch.di
 
+import android.content.Context
 import com.hmtamim.imagesearch.BuildConfig
 import com.hmtamim.imagesearch.data.remote.ApiClient
 import com.hmtamim.imagesearch.data.repository.ApiRepository
+import com.hmtamim.imagesearch.utils.NetworkConnectionObserver
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -13,6 +16,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -54,4 +58,12 @@ class NetworkModule {
     fun provideApiRepository(apiClient: ApiClient): ApiRepository {
         return ApiRepository(apiClient)
     }
+
+    @Provides
+    @Singleton
+    @Named("network_connection_livedata")
+    fun provideNetworkConnectionObserver(@ApplicationContext context: Context): NetworkConnectionObserver {
+        return NetworkConnectionObserver(context)
+    }
+
 }
