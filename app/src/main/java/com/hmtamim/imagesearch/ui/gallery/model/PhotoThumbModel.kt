@@ -1,6 +1,5 @@
 package com.hmtamim.imagesearch.ui.gallery.model
 
-import android.util.Log
 import android.view.View
 import androidx.databinding.ViewDataBinding
 import com.airbnb.epoxy.DataBindingEpoxyModel

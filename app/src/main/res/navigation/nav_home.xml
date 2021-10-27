@@ -7,7 +7,17 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.hmtamim.imagesearch.ui.home.HomeFragment"
-        android:label="HomeFragment" />
+        android:label="HomeFragment">
+        <action
+            android:id="@+id/action_homeFragment_to_galleryFragment"
+            app:destination="@id/galleryFragment">
+            <argument
+                android:name="query"
+                android:defaultValue=""
+                app:argType="string" />
+
+        </action>
+    </fragment>
     <fragment
         android:id="@+id/photoViewerFragment"
         android:name="com.hmtamim.imagesearch.ui.photoViewer.PhotoViewerFragment"

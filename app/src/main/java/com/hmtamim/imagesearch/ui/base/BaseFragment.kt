@@ -25,7 +25,6 @@ abstract class BaseFragment<DATA_BINDING : ViewDataBinding, VIEW_MODEL : ViewMod
         ViewModelProvider(this).get(viewModelClassType)
     }
     protected lateinit var binding: DATA_BINDING
-    protected var navController: NavController? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,8 +35,6 @@ abstract class BaseFragment<DATA_BINDING : ViewDataBinding, VIEW_MODEL : ViewMod
         binding.setVariable(BR.viewModel, viewModel)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.executePendingBindings()
-        if (requireActivity() is MainActivity)
-            navController = NavHostFragment.findNavController(this)
         return binding.root
     }
 

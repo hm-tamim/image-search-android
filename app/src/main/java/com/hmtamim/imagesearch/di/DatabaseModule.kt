@@ -2,9 +2,7 @@ package com.hmtamim.imagesearch.di
 
 import android.content.Context
 import androidx.room.Room
-import com.hmtamim.imagesearch.data.repository.AppRepository
 import com.hmtamim.imagesearch.data.room.AppDatabase
-import com.hmtamim.imagesearch.data.room.dao.HistoryDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

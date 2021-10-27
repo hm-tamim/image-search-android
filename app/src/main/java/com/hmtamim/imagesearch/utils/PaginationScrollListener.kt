@@ -60,7 +60,8 @@ abstract class PaginationScrollListener : RecyclerView.OnScrollListener {
             if (staggeredGridLayoutManager != null) {
                 visibleItemCount = staggeredGridLayoutManager!!.childCount
                 totalItemCount = staggeredGridLayoutManager!!.itemCount
-                val firstVisibleItems: IntArray? = staggeredGridLayoutManager!!.findFirstVisibleItemPositions(null)
+                val firstVisibleItems: IntArray? =
+                    staggeredGridLayoutManager!!.findFirstVisibleItemPositions(null)
                 if (firstVisibleItems != null && firstVisibleItems.isNotEmpty()) firstVisibleItemPosition =
                     firstVisibleItems[0]
             }

@@ -12,6 +12,7 @@ import android.widget.TextView.OnEditorActionListener
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hmtamim.imagesearch.R
@@ -206,7 +207,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
         val bundle = Bundle()
         bundle.putString("image_url", model.webformatURL)
         bundle.putInt("image_position", position)
-        navController?.navigate(R.id.photoViewerFragment, bundle, null, extras)
+        findNavController().navigate(R.id.photoViewerFragment, bundle, null, extras)
     }
 
 }

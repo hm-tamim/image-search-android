@@ -1,22 +1,20 @@
 package com.hmtamim.imagesearch.ui.home
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.TextView
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.hmtamim.imagesearch.R
 import com.hmtamim.imagesearch.databinding.FragmentHomeBinding
 import com.hmtamim.imagesearch.ui.base.BaseFragment
 import com.hmtamim.imagesearch.utils.ToastUtils
 import com.hmtamim.imagesearch.utils.openKeyboard
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Observer
 
 
 @AndroidEntryPoint
@@ -35,15 +33,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
 
         // listen to search click and open perform search on gallery fragment
         binding.etSearch.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
                 val query = binding.etSearch.text.toString()
                 if (query.isEmpty()) {
                     ToastUtils.show("Please type something to search", context)
                     return@OnEditorActionListener false
                 }
-                val bundle = Bundle()
-                bundle.putString("query", query)
-                navController?.navigate(R.id.galleryFragment, bundle)
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToGalleryFragment(query))
                 return@OnEditorActionListener true
             }
             false
@@ -67,9 +63,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
     }
 
     override fun liveEventsObservers() {
-        viewModel.networkConnectionObserver.observe(viewLifecycleOwner) {
-
-        }
+        viewModel.networkConnectionObserver.observe(viewLifecycleOwner, Observer {
+            Log.d("is_offline", it.toString())
+        })
     }
 
     override fun clickListeners() {

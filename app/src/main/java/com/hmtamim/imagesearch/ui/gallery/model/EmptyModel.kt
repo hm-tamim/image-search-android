@@ -6,7 +6,6 @@ import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
 import com.hmtamim.imagesearch.R
 import com.hmtamim.imagesearch.databinding.ItemEmptyBinding
-import com.hmtamim.imagesearch.databinding.ItemLoadingBinding
 
 
 @EpoxyModelClass(layout = R.layout.item_empty)
