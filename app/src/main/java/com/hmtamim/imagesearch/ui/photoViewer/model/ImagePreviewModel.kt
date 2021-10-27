@@ -36,7 +36,7 @@ abstract class ImagePreviewModel : DataBindingEpoxyModel() {
 
         val requestOptions = RequestOptions.placeholderOf(R.drawable.bg_placeholder)
             .dontTransform()
-            .onlyRetrieveFromCache(true)
+           // .onlyRetrieveFromCache(true)
 
         Glide.with(binding.image)
             .asBitmap()
@@ -57,45 +57,5 @@ abstract class ImagePreviewModel : DataBindingEpoxyModel() {
 
     override fun setDataBindingVariables(binding: ViewDataBinding?) {
 
-    }
-
-    private fun ImageView.loadWithTransitionCallback(
-        url: String,
-        loadOnlyFromCache: Boolean = false,
-        onLoadingFinished: () -> Unit = {}
-    ) {
-
-        val listener = object : RequestListener<Drawable> {
-            override fun onLoadFailed(
-                e: GlideException?,
-                model: Any?,
-                target: Target<Drawable>?,
-                isFirstResource: Boolean
-            ): Boolean {
-                onLoadingFinished()
-                return false
-            }
-
-            override fun onResourceReady(
-                resource: Drawable?,
-                model: Any?,
-                target: Target<Drawable>?,
-                dataSource: DataSource?,
-                isFirstResource: Boolean
-            ): Boolean {
-                onLoadingFinished()
-                return false
-            }
-        }
-
-        val requestOptions = RequestOptions.placeholderOf(R.drawable.bg_placeholder)
-            .dontTransform()
-            .onlyRetrieveFromCache(loadOnlyFromCache)
-
-        Glide.with(this)
-            .load(url)
-            .apply(requestOptions)
-            .listener(listener)
-            .into(this)
     }
 }
