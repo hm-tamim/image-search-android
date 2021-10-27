@@ -4,7 +4,9 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.transition.TransitionInflater
 import android.view.View
+import android.view.View.OnLayoutChangeListener
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -14,6 +16,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.hmtamim.imagesearch.R
 import com.hmtamim.imagesearch.data.room.entity.ImageEntity
 import com.hmtamim.imagesearch.databinding.FragmentGalleryBinding
@@ -23,6 +26,7 @@ import com.hmtamim.imagesearch.ui.main.MainViewModel
 import com.hmtamim.imagesearch.utils.PaginationScrollListener
 import com.hmtamim.imagesearch.utils.ToastUtils
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
@@ -38,9 +42,32 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
     }
 
     override fun initViews() {
-        postponeEnterTransition()
+        initTransitions()
         checkArguments()
         initSearch()
+    }
+
+    private fun initTransitions() {
+
+        exitTransition =
+            TransitionInflater.from(context).inflateTransition(R.transition.exit_gallery)
+
+        setExitSharedElementCallback(object : androidx.core.app.SharedElementCallback() {
+            override fun onMapSharedElements(
+                names: MutableList<String>,
+                sharedElements: MutableMap<String, View>
+            ) {
+                super.onMapSharedElements(names, sharedElements)
+                val selectedViewHolder: RecyclerView.ViewHolder? =
+                    binding.recyclerView.findViewHolderForAdapterPosition(mainViewModel.selectedImagePosition)
+                if (selectedViewHolder != null) {
+                    sharedElements[names[0]] = selectedViewHolder.itemView.findViewById(R.id.image)
+                }
+            }
+        })
+
+        postponeEnterTransition()
+
     }
 
     private fun checkArguments() {
@@ -134,6 +161,30 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding, GalleryViewModel>(
         })
 
         controller.requestModelBuild()
+
+        binding.recyclerView.addOnLayoutChangeListener(
+            object : OnLayoutChangeListener {
+                override fun onLayoutChange(
+                    view: View,
+                    left: Int,
+                    top: Int,
+                    right: Int,
+                    bottom: Int,
+                    oldLeft: Int,
+                    oldTop: Int,
+                    oldRight: Int,
+                    oldBottom: Int
+                ) {
+                    binding.recyclerView.removeOnLayoutChangeListener(this)
+                    val viewAtPosition =
+                        layoutManager.findViewByPosition(mainViewModel.selectedImagePosition)
+                    if (viewAtPosition == null
+                        || layoutManager.isViewPartiallyVisible(viewAtPosition, false, true)
+                    ) {
+                        binding.recyclerView.post { layoutManager.scrollToPosition(mainViewModel.selectedImagePosition) }
+                    }
+                }
+            })
     }
 
     override fun clickListeners() {

@@ -12,6 +12,7 @@ class MainViewModel @Inject constructor(
     val appRepository: AppRepository
 ) : ViewModel() {
 
+    var selectedImagePosition = 0
     val photosLiveList = MutableLiveData<List<ImageEntity>>()
 
 }

@@ -1,6 +1,7 @@
 package com.hmtamim.imagesearch.ui.photoViewer
 
 import android.transition.TransitionInflater
+import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
@@ -9,7 +10,6 @@ import com.hmtamim.imagesearch.databinding.FragmentPhotoViewerBinding
 import com.hmtamim.imagesearch.ui.base.BaseFragment
 import com.hmtamim.imagesearch.ui.main.MainViewModel
 import com.hmtamim.imagesearch.ui.photoViewer.controller.ImageViewPagerController
-import com.hmtamim.imagesearch.utils.ToastUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -31,40 +31,50 @@ class PhotoViewerFragment : BaseFragment<FragmentPhotoViewerBinding, PhotoViewer
             if (it.containsKey("image_position"))
                 selectedPosition = it.getInt("image_position")
         }
-        postponeEnterTransition()
+    }
+
+    private fun initTransitions() {
         sharedElementEnterTransition =
             TransitionInflater.from(context).inflateTransition(R.transition.shared_image)
-        sharedElementReturnTransition =
-            TransitionInflater.from(context).inflateTransition(R.transition.shared_image)
+
+        setEnterSharedElementCallback(object : androidx.core.app.SharedElementCallback() {
+            override fun onMapSharedElements(
+                names: MutableList<String>,
+                sharedElements: MutableMap<String, View>
+            ) {
+                super.onMapSharedElements(names, sharedElements)
+                val current = controller.adapter.boundViewHolders.getHolderForModel(
+                    controller.adapter.getModelAtPosition(binding.viewPager.currentItem)
+                )
+                if (current != null) {
+                    sharedElements[names[0]] = current.itemView.findViewById(R.id.image)
+                }
+            }
+        })
+
+        postponeEnterTransition()
     }
 
     override fun setupRecycler() {
-//        controller.addModelBuildListener {
-//            startPostponedEnterTransition()
-//        }
         binding.viewPager.adapter = controller.adapter
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
+                mainViewModel.selectedImagePosition = position
                 super.onPageSelected(position)
             }
         })
+
+        initTransitions()
     }
 
     override fun liveEventsObservers() {
-
-        mainViewModel.photosLiveList.observe(viewLifecycleOwner, Observer {
-            controller.list = it
-            controller.requestModelBuild()
-            binding.viewPager.setCurrentItem(selectedPosition, false)
-            startPostponedEnterTransition()
+        mainViewModel.photosLiveList.observe(viewLifecycleOwner, Observer {list ->
+            list?.let {
+                controller.list = it
+                controller.requestModelBuild()
+                binding.viewPager.setCurrentItem(selectedPosition, false)
+            }
         })
-
-//        viewModel.getLivData().observe(this, Observer {
-//            binding.image.transitionName = it
-//            binding.image.loadWithTransitionCallback(it, true) {
-//                startPostponedEnterTransition()
-//            }
-//        })
     }
 
     override fun clickListeners() {
@@ -74,6 +84,7 @@ class PhotoViewerFragment : BaseFragment<FragmentPhotoViewerBinding, PhotoViewer
     }
 
     override fun startTransition() {
+        // start transition when image is loaded
         startPostponedEnterTransition()
     }
 
