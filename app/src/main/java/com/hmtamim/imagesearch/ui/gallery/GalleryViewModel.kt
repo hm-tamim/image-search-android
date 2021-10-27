@@ -1,6 +1,5 @@
 package com.hmtamim.imagesearch.ui.gallery
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.hmtamim.imagesearch.R
 import com.hmtamim.imagesearch.data.repository.ApiRepository
@@ -27,23 +26,22 @@ class GalleryViewModel @Inject constructor(
     private var networkConnectionObserver: NetworkConnectionObserver
 ) : ViewModel() {
 
-    var query = "nature"
+    var query = "nature" // default search term for dummy images
     private var page = 1
     private var shouldFetchNextPage = true
     private var gridSizeLiveData: MutableLiveData<Int> = MutableLiveData()
     private val photosLiveList: MutableLiveData<List<ImageEntity>> = MutableLiveData()
     val hideLoadingBar: SingleLiveEvent<Void> = SingleLiveEvent()
     val photosArrayList: MutableList<ImageEntity> = ArrayList()
-    var isOffline: Boolean = true
+    var isOffline: Boolean = false
 
     init {
-        viewModelScope.launch {
-            networkConnectionObserver.asFlow().collect {
-                isOffline = !it
-                Log.e("hmtz", "isOffline: ${isOffline}")
-            }
-        }
 
+        // set current network status and observe for future changes
+        networkConnectionObserver.value?.let { isOffline = !it }
+        viewModelScope.launch { networkConnectionObserver.asFlow().collect { isOffline = !it } }
+
+        // default values
         page = 1
         gridSizeLiveData.value = 2
         if (savedStateHandle.contains("query")) {
@@ -78,7 +76,8 @@ class GalleryViewModel @Inject constructor(
             }
 
             override fun onError(errorBody: String, errorCode: Int) {
-
+                if (isOffline)
+                    getPhotosFromDatabase()
             }
         })
     }

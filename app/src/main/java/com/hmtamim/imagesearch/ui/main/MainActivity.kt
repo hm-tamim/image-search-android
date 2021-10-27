@@ -1,5 +1,6 @@
 package com.hmtamim.imagesearch.ui.main
 
+import androidx.lifecycle.Observer
 import com.hmtamim.imagesearch.R
 import com.hmtamim.imagesearch.databinding.ActivityMainBinding
 import com.hmtsoft.webcapture.ui.base.BaseActivity
@@ -16,7 +17,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     override fun liveEventsObservers() {
+        viewModel.networkConnectionObserver.observe(this, Observer {
 
+        })
     }
 
     override fun clickListeners() {
