@@ -1,4 +1,4 @@
-package com.hmtsoft.webcapture.ui.base
+package com.hmtamim.imagesearch.ui.base
 
 import android.os.Bundle
 import android.view.MotionEvent
@@ -10,7 +10,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.databinding.library.baseAdapters.BR
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-
 
 /** Base activity for auto data binding, reduce boilerplate and hide keyboard events*/
 abstract class BaseActivity<DATA_BINDING : ViewDataBinding, VIEW_MODEL : ViewModel>(

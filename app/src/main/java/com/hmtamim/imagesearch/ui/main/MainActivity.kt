@@ -1,9 +1,8 @@
 package com.hmtamim.imagesearch.ui.main
 
-import androidx.lifecycle.Observer
 import com.hmtamim.imagesearch.R
 import com.hmtamim.imagesearch.databinding.ActivityMainBinding
-import com.hmtsoft.webcapture.ui.base.BaseActivity
+import com.hmtamim.imagesearch.ui.base.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
